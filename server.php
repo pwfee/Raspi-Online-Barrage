@@ -8,7 +8,7 @@
  */
 
 //connect to mysql
-$con = mysql_connect("localhost","ss","vinsonpanwenfeng123.");
+$con = mysql_connect("localhost","sql username","sql password");
 if (!$con){
     echo "Cannot Connect to mysql!";
 }
