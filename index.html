@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<style type="text/css">
+		body {
+			background: #333;
+			text-align: center;
+			margin-top: 10%;
+		}
+		#videoCanvas {
+			/* Always stretch the canvas to 640x480, regardless of its
+			internal size. */
+			width: 640px;
+			height: 480px;
+		}
+	</style>
+    <title>Online Barrager</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="dist/css/barrager.css">
+</head>
+<body>
+<h1 style="font-align:center;color:white">Online Barrager</h1>    
+    <!-- JS dependencies -->
+    <script type="text/javascript" src="static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="dist/js/jquery.barrager.min.js"></script>
+	<canvas id="videoCanvas" width="640" height="480">
+		<p>
+			Please use a browser that supports the Canvas Element, like
+			<a href="http://www.google.com/chrome">Chrome</a>,
+			<a href="http://www.mozilla.com/firefox/">Firefox</a>,
+			<a href="http://www.apple.com/safari/">Safari</a> or Internet Explorer 10
+		</p>
+	</canvas>
+	<script type="text/javascript" src="dist/js/jsmpg.js"></script>
+	<script type="text/javascript">
+		// Setup the WebSocket connection and start the player
+		var client = new WebSocket( 'ws://camera.tunnel.qydev.com/' );
+
+		var canvas = document.getElementById('videoCanvas');
+		var player = new jsmpeg(client, {canvas:canvas});
+	</script>
+
+    <script>
+    //每条弹幕发送间隔
+        var looper_time=1000;
+        //是否首次执行
+        var run_once=true;
+        do_barrager();
+         
+        function do_barrager(){
+          if(run_once){
+              //如果是首次执行,则设置一个定时器,并且把首次执行置为false
+              looper=setInterval(do_barrager,looper_time);                
+              run_once=false;
+          }
+          //获取
+          $.getJSON('server.php?mode=1',function(data){
+              //是否有数据
+              if(data.info){
+         
+                   $('body').barrager(data);
+              }
+         
+          });
+        }    
+    </script>
+</body>
+</html>
